@@ -3,15 +3,18 @@ import { comment_data } from "@/types/Types";
 import { useCallback, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import Comment from "./Comment";
+import { useUser } from "@/app/UserContext";
+import { useAuth } from "@/hooks/auth";
 
 type CommentsProps = {
   id: number;
 };
 
 const Comments = ({ id }: CommentsProps) => {
+const {user} = useAuth({});
   const getKey = (pageIndex: number, previousPageData: comment_data | null) => {
     if (previousPageData && !previousPageData.next_page_url) return null;
-    return `/api/comments?book_id=${id}&page=${pageIndex + 1}`; // Ensure correct page number
+    return `/api/comments?book_id=${id}&page=${pageIndex + 1}`; 
   };
 
   const { data, size, setSize, mutate, isValidating } = useSWRInfinite(getKey, fetcher, {
@@ -84,8 +87,9 @@ const Comments = ({ id }: CommentsProps) => {
           />
         ))}
       </div>
-
-      <form className="w-full flex justify-around items-center p-3" onSubmit={handleSubmit}>
+      { 
+      user ? 
+   (   <form className="w-full flex justify-around items-center p-3" onSubmit={handleSubmit}>
         <div className="flex-shrink-0 ml-6">
           <button className="px-8 py-4 rounded-lg bg-red-500 hover:text-black transition-colors duration-300" type="submit">
             نشر
@@ -98,8 +102,12 @@ const Comments = ({ id }: CommentsProps) => {
           name="comment"
           value={formData.comment}
           onChange={handleChange}
-        ></textarea>
-      </form>
+          ></textarea>
+          </form>) :
+          <div className="text-center text-lg">
+            يجب عليك تسجيل الدخول لنشر تعليق 
+          </div>
+        }
     </div>
   );
 };

@@ -67,6 +67,10 @@ export interface commentype {
     id: number,
     book_id :number,
     comment: string,
-    is_owner:boolean , 
+    is_owner: boolean, 
+    user: {
+        id: number, 
+        name:string
+    }
 }
 export interface type_icon {[key:string]:JSX.Element }

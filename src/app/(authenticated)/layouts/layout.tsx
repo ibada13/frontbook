@@ -4,8 +4,8 @@ import { useAuth } from '@/hooks/auth'
 import Navigation from '@/components/Layouts/Navigation'
 import Paginator from '@/components/Layouts/Paginator'
 import { GiBookStorm } from "react-icons/gi";
-const AppLayout = ({ children , path, totalPages }: { children: ReactNode,path?:string , totalPages?:number|null }) => {
-  const { user } = useAuth({ middleware: 'auth' })
+const AppLayout = ({ children , path, totalPages , middleware }: { children: ReactNode,path?:string , totalPages?:number|null , middleware:string }) => {
+  const { user } = useAuth({ middleware: middleware })
 
   return (
     <div className="min-h-screen bg-black ">

@@ -4,11 +4,12 @@ import { useAuth } from '@/hooks/auth';
 import BookCard from "./ui/Book";
 import useSWR from "swr";
 import { useSearchParams } from 'next/navigation';
-import AppLayout from '../layouts/layout';
+import AppLayout from '@/app/(authenticated)/layouts/layout';
 import { fetcher } from '@/hooks/userhooks';
 import { data } from '@/types/Types';
-import TextDisplay from '../components/TextDisplay';
-const Books = () => {
+import TextDisplay from '@/app/(authenticated)/components/TextDisplay';
+import { UserType } from '@/types/User';
+const Books = ({ user }: {user:UserType}) => {
   const searchparams = useSearchParams();
   const id = Number(searchparams.get('id')) || 1;
 
@@ -19,7 +20,7 @@ const Books = () => {
  
   console.log(bookList)
   return (
-    <AppLayout path="/books" totalPages={bookList?.last_page||null}>
+    <AppLayout middleware='optional' path="/books" totalPages={bookList?.last_page||null}>
       {error ? (
 
         <TextDisplay text='حدث خطأ أثناء تحميل الكتب.'/>

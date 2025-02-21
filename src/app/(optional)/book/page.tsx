@@ -7,12 +7,13 @@ import { useRef, useCallback } from "react";
 import useSWRInfinite from "swr/infinite";
 import useSWR from "swr";
 import { comment_data, booktype } from "@/types/Types";
-import AppLayout from "../layouts/layout";
+import AppLayout from "@/app/(authenticated)/layouts/layout";
 import { del, fetcher } from "@/hooks/userhooks";
 import Comments from "./ui/Comments";
-import TextDisplay from "../components/TextDisplay";
+import TextDisplay from "@/app/(authenticated)/components/TextDisplay";
+import { UserType } from "@/types/User";
 
-const Book = () => {
+const Book = ({ user }: {user:UserType}) => {
     const searchParams = useSearchParams();
     const id = Number(searchParams.get('id')) || 1;
     const apiUrl = `/api/book?id=${id}`;
@@ -27,7 +28,7 @@ const Book = () => {
 
 
     return (
-        <AppLayout>
+        <AppLayout middleware="optional">
             <div className="flex flex-col justify-around text-white">
                 <div className="flex flex-col space-y-6 md:flex-row justify-center md:justify-around items-center min-h-screen p-6">
                     <div className="w-1/4 bg-red-500 h-1/2 border rounded-md self-center">

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import {Cairo} from 'next/font/google'
 import "./globals.css";
-
+import { UserProvider } from "./UserContext";
 const cairo = Cairo({
   subsets: ['latin'],
   weight: ['400', '700'],
@@ -29,7 +29,10 @@ export default function RootLayout({
         }}
         className={`${cairo.className} antialiased  `}
       >
+        <UserProvider>
+
         {children}
+        </UserProvider>
       </body>
     </html>
   );
