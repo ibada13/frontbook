@@ -1,4 +1,4 @@
-import { del, fetcher, post } from "@/hooks/userhooks";
+import { del, fetcher, post, put } from "@/hooks/userhooks";
 import { comment_data } from "@/types/Types";
 import { useCallback, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
@@ -11,7 +11,7 @@ type CommentsProps = {
 };
 
 const Comments = ({ id }: CommentsProps) => {
-const {user} = useAuth({});
+const user = useUser();
   const getKey = (pageIndex: number, previousPageData: comment_data | null) => {
     if (previousPageData && !previousPageData.next_page_url) return null;
     return `/api/comments?book_id=${id}&page=${pageIndex + 1}`; 
@@ -46,10 +46,18 @@ const {user} = useAuth({});
 
   const handleDelete = async (commentId: number) => {
     try {
-      await del(`/api/comments?id=${commentId}`);
+      await del(`/api/comments/${commentId}`);
       mutate();
     } catch (error) {
       console.error("Error deleting comment:", error);
+    }
+  };
+  const handleEdit = async (commentId: number , data:any) => {
+    try {
+      await put(`/api/comments/${commentId}`,data);
+      mutate();
+    } catch (error) {
+      console.error("Error editing comment:", error);
     }
   };
 
@@ -81,6 +89,7 @@ const {user} = useAuth({});
           <Comment
             key={comment.id}
             handleDelete={handleDelete}
+            handleEdit={handleEdit}
             comment={comment}
             index={index}
             ref={index === comments.length - 1 ? lastCommentRef : null} // Attach ref correctly

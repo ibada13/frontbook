@@ -50,4 +50,14 @@ const del = async (url: string) => {
         return null;
     }
 }
-export {books , fetcher,del , post}
+const put = async (url: string, data: any) => { 
+  try { 
+    console.log("data :" ,data)
+    const response = await axios.put(url, data)
+    return response.data
+  } catch (err) { 
+    console.error("err puting the data ", err)
+    return null
+  }
+}
+export {books , fetcher,del , post , put}
