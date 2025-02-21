@@ -28,7 +28,16 @@ const fetcher = async (url:string) => {
   
   
 };
-
+const post = async (url: string ,data:any) => {
+  try {
+    const response = await axios.post(url , data)
+    return response.data
+  }
+  catch (err) {
+    console.error("err posting :  " , err); 
+    return null
+   }
+}
 
 const del = async (url: string) => {
     // console.log(url)
@@ -41,4 +50,4 @@ const del = async (url: string) => {
         return null;
     }
 }
-export {books , fetcher,del}
+export {books , fetcher,del , post}

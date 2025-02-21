@@ -1,15 +1,28 @@
-import {  commentype } from "@/types/Types";
+import { forwardRef } from "react";
+import { commentype } from "@/types/Types";
 
-const Comment = ({ comment ,index ,  cond , ref , handleDelete}: {comment:commentype , index:number,cond:number , ref:(node: any) => void , handleDelete: (id: number) => Promise<void>
-} ) => { 
+type CommentProps = {
+  comment: commentype;
+  index: number;
+  handleDelete: (id: number) => Promise<void>;
+};
 
+const Comment = forwardRef<HTMLDivElement, CommentProps>(
+  ({ comment, index, handleDelete }, ref) => {
     return (
-        <div key={comment.id} className="m-3 bg-gray-800 p-2 rounded-md mb-2" ref={index ===cond ? ref : null}>
+      <div ref={ref} key={comment.id} className="m-3 bg-gray-800 p-2 rounded-md mb-2">
         <p className="text-sm">{comment.comment}</p>
-        <button className="text-red-500 hover:underline text-xs" onClick={() => handleDelete(comment.id)}>
+        {comment.is_owner && (
+          <button
+            className="text-red-500 hover:underline text-xs"
+            onClick={() => handleDelete(comment.id)}
+          >
             حذف
-        </button>
-    </div>
+          </button>
+        )}
+      </div>
     );
-}
-export default Comment
+  }
+);
+
+export default Comment;

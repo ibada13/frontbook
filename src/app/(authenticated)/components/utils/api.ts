@@ -1,5 +1,5 @@
 const base_url:string = "http://127.0.0.1:8000/api/"
-import axios from "@/app/auth/lib/axios";
+import axios from "@/lib/axios";
 
 export const fetch_books = async (url: string) => {
     try {
