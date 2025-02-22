@@ -3,26 +3,31 @@
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import useSWR from "swr";
 import { comment_data, booktype } from "@/types/Types";
 import AppLayout from "@/app/(authenticated)/layouts/layout";
-import { del, fetcher, post } from "@/hooks/userhooks";
+import { del, fetcher, post, put } from "@/hooks/userhooks";
 import Comments from "./ui/Comments";
 import TextDisplay from "@/app/(authenticated)/components/TextDisplay";
 import { UserType } from "@/types/User";
 import { useAuth } from "@/hooks/auth";
 import axios from "axios";
+import Form from "../books/ui/Form";
 
 const Book = () => {
     const searchParams = useSearchParams();
     const id = Number(searchParams.get('id')) || 1;
     const apiUrl = `/api/book?id=${id}`;
     const { user} = useAuth({})
-    
+    const [Edit, SetEdit] = useState<boolean>(false);
     const { data: book, error,mutate, isLoading } = useSWR<any>(apiUrl, fetcher);
-
+    const [formData, setFormData] = useState<{pages:""|number}>({ pages: "" });
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value ? Number(e.target.value) : "";
+        setFormData({ pages: value });
+    };
     const startreading = async (id:number) => { 
         try {
 
@@ -35,6 +40,23 @@ const Book = () => {
             console.error("error " , err)
         }
     }
+
+
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!formData.pages || isNaN(formData.pages)) return;
+        try {
+            const url = `/api/book/${book.id}/update-pages`
+            await put(url, { ...formData })
+            mutate();
+        } catch (err) {
+            console.error("err ", err)
+        } finally { 
+            SetEdit(false)
+
+        }
+}
     if (isLoading) return <TextDisplay text='يتم تحميل الكتاب ....'/>;
         
     if (error || !book) return <TextDisplay text='هذا الكتاب غير متاح حاليا.'/>;
@@ -80,8 +102,25 @@ const Book = () => {
                         }
                         { 
                             user ?
-                                book?.pages_read!==null ?
-                            (<p className="text-xl flex text-white gap-x-4">
+                                book?.pages_read !== null ?
+                                    Edit ?
+                                        (
+                                            <form className=" p-2 flex " onSubmit={handleSubmit}>
+                                                <div className="flex items-center justify-center">
+
+                                                <input defaultValue={book.pages_read} onChange={handleChange} className="text-black text-xl font-semibold  h-2/3 w-1/2" type="number" placeholder="أدخل رقم الصفحة التي وصلت لها " />
+                                                </div>
+                                                <div className="flex flex-col justify-around p-2">
+
+                                                <button className="mb-2 transition-colors duration-150 bg-red-500 hover:bg-red-700 hover:text-black p-2 rounded-lg"  onClick={ ()=>SetEdit(false)}>إلغاء</button>
+                                                <button className="mt-2 transition-colors duration-150 bg-green-500 hover:bg-green-700 hover:text-black p-2 rounded-lg" type="submit">حفظ</button>
+                                                </div>
+                                                
+                                        </form>
+                                        )
+                                        
+                                        :
+                            (<p onClick={()=>SetEdit(true)} className=" cursor-pointer text-xl flex text-white gap-x-4">
                             <span>{book.pages_read}</span>
                             <span className="text-red-500">من</span>
                             <span>{book.pages}</span>

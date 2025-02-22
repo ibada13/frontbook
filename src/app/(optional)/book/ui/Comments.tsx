@@ -72,7 +72,6 @@ const Comments = ({ user, id }: { user: UserType; id: number }) => {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.comment.trim()) return;

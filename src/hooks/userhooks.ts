@@ -60,4 +60,7 @@ const put = async (url: string, data: any) => {
     return null
   }
 }
+
+
+
 export {books , fetcher,del , post , put}
