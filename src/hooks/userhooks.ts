@@ -28,7 +28,7 @@ const fetcher = async (url:string) => {
   
   
 };
-const post = async (url: string ,data:any) => {
+const post = async (url: string ,data?:any) => {
   try {
     const response = await axios.post(url , data)
     return response.data

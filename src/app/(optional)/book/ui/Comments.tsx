@@ -5,16 +5,14 @@ import useSWRInfinite from "swr/infinite";
 import Comment from "./Comment";
 import { useUser } from "@/app/UserContext";
 import { useAuth } from "@/hooks/auth";
+import { UserType } from "@/types/User";
 
-type CommentsProps = {
-  id: number;
-};
-
-const Comments = ({ id }: CommentsProps) => {
-const user = useUser();
+const Comments = ({ user, id }: { user: UserType; id: number }) => {
   const getKey = (pageIndex: number, previousPageData: comment_data | null) => {
-    if (previousPageData && !previousPageData.next_page_url) return null;
-    return `/api/comments?book_id=${id}&page=${pageIndex + 1}`; 
+    if (previousPageData && (!previousPageData.next_page_url || previousPageData.data.length === 0)) {
+      return null;
+    }
+    return `/api/comments?book_id=${id}&page=${pageIndex + 1}`;
   };
 
   const { data, size, setSize, mutate, isValidating } = useSWRInfinite(getKey, fetcher, {
@@ -26,7 +24,14 @@ const user = useUser();
   const lastCommentRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (isValidating || !data || !data[data.length - 1]) return;
-      
+
+      const lastPage = data[data.length - 1];
+
+      if (!lastPage.next_page_url) {
+        if (observer.current) observer.current.disconnect();
+        return;
+      }
+
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
@@ -52,9 +57,10 @@ const user = useUser();
       console.error("Error deleting comment:", error);
     }
   };
-  const handleEdit = async (commentId: number , data:any) => {
+
+  const handleEdit = async (commentId: number, data: any) => {
     try {
-      await put(`/api/comments/${commentId}`,data);
+      await put(`/api/comments/${commentId}`, data);
       mutate();
     } catch (error) {
       console.error("Error editing comment:", error);
@@ -85,38 +91,39 @@ const user = useUser();
   return (
     <div className="m-5 h-100 flex flex-col justify-around p-2 bg-gray-900 rounded-md border border-gray-700">
       <div className="h-80 overflow-y-auto">
-        {comments.map((comment, index) => (
-          <Comment
-            key={comment.id}
-            handleDelete={handleDelete}
-            handleEdit={handleEdit}
-            comment={comment}
-            index={index}
-            ref={index === comments.length - 1 ? lastCommentRef : null} // Attach ref correctly
-          />
-        ))}
+        {comments.map((comment, index) => {
+          const isLastComment = index === comments.length - 1;
+          return (
+            <Comment
+              key={comment.id}
+              handleDelete={handleDelete}
+              handleEdit={handleEdit}
+              comment={comment}
+              index={index}
+              ref={isLastComment ? lastCommentRef : null}
+            />
+          );
+        })}
       </div>
-      { 
-      user ? 
-   (   <form className="w-full flex justify-around items-center p-3" onSubmit={handleSubmit}>
-        <div className="flex-shrink-0 ml-6">
-          <button className="px-8 py-4 rounded-lg bg-red-500 hover:text-black transition-colors duration-300" type="submit">
-            نشر
-          </button>
-        </div>
-        <textarea
-          className="w-3/4 text-center focus:ring-0 border-2 border-gray-700 text-lg rounded-lg focus:border-2 focus:outline-none focus:border-red-400 transition-colors duration-200 bg-black mr-6"
-          placeholder="تعليق"
-          spellCheck={true}
-          name="comment"
-          value={formData.comment}
-          onChange={handleChange}
-          ></textarea>
-          </form>) :
-          <div className="text-center text-lg">
-            يجب عليك تسجيل الدخول لنشر تعليق 
+      {user ? (
+        <form className="w-full flex justify-around items-center p-3" onSubmit={handleSubmit}>
+          <div className="flex-shrink-0 ml-6">
+            <button className="px-8 py-4 rounded-lg bg-red-500 hover:text-black transition-colors duration-300" type="submit">
+              نشر
+            </button>
           </div>
-        }
+          <textarea
+            className="w-3/4 text-center focus:ring-0 border-2 border-gray-700 text-lg rounded-lg focus:border-2 focus:outline-none focus:border-red-400 transition-colors duration-200 bg-black mr-6"
+            placeholder="تعليق"
+            spellCheck={true}
+            name="comment"
+            value={formData.comment}
+            onChange={handleChange}
+          ></textarea>
+        </form>
+      ) : (
+        <div className="text-center text-lg">يجب عليك تسجيل الدخول لنشر تعليق</div>
+      )}
     </div>
   );
 };
