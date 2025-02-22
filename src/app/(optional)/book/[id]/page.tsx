@@ -6,19 +6,18 @@ import Image from "next/image";
 import { useRef, useCallback, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import useSWR from "swr";
-import { comment_data, booktype } from "@/types/Types";
 import AppLayout from "@/app/(authenticated)/layouts/layout";
 import { del, fetcher, post, put } from "@/hooks/userhooks";
-import Comments from "./ui/Comments";
+import Comments from "../ui/Comments";
 import TextDisplay from "@/app/(authenticated)/components/TextDisplay";
-import { UserType } from "@/types/User";
 import { useAuth } from "@/hooks/auth";
 import axios from "axios";
-import Form from "../books/ui/Form";
+import { useRouter } from "next/router";
 
-const Book = () => {
-    const searchParams = useSearchParams();
-    const id = Number(searchParams.get('id')) || 1;
+const Book = ({ params }: { params: {id:number} }) => {
+    // const router = useRouter();
+    // const id = router.query?.id ? Number(router.query.id) : null;
+    const id = Number(params.id)||1
     const apiUrl = `/api/book?id=${id}`;
     const { user} = useAuth({})
     const [Edit, SetEdit] = useState<boolean>(false);
@@ -63,9 +62,13 @@ const Book = () => {
 
 
     return (
-        <AppLayout middleware="optional">
-            <div className="flex flex-col justify-around text-white">
-                <div className="flex flex-col space-y-6 md:flex-row justify-center md:justify-around items-center min-h-screen p-6">
+        <AppLayout currentPage={id} middleware="optional">
+            <div className="flex flex-col w-full justify-around text-white">
+                <div className="p-6">
+
+                    <p>ناشر الكتاب : <Link href={`/user/${book.publisher.id}`}>{book.publisher.name}</Link> </p>
+                </div>
+                <div className="flex w-full flex-col space-y-6 md:flex-row justify-center md:justify-around items-center min-h-screen p-6">
                     <div className="w-1/4 bg-red-500 h-1/2 border rounded-md self-center">
                         {book.cover_path && (
                             <Image alt={book.title} width={300} height={200} src={book.cover_path} />
@@ -90,7 +93,7 @@ const Book = () => {
                             book.is_owner&& (
                                 
                                 
-                                <div className="self-center flex flex-col sm:flex-row w-1/2 gap-y-3 sm:gap-y-0 sm:items-center sm:justify-around">
+                                <div className="items-center  self-center flex flex-col sm:flex-row w-1/2 gap-y-3 sm:gap-y-0 sm:items-center sm:justify-around">
                             <Link className="p-4 sm:w-1/4 w-1/2 text-md font-black bg-green-400 hover:text-black transition-colors duration-300 rounded-md text-center" href={{ pathname: `/book/edit/`, query: { book: JSON.stringify(book) } }}>
                                 تعديل
                             </Link>

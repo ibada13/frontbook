@@ -47,14 +47,11 @@ const BookCard = ({ book }: { book: any }) => {
       >
         
         
-        <Link href={{
-          pathname: `/book/`,
-          query: {
-            id:book.id,
+        <Link href={`/book/${book.id}`} passHref className="flex flex-col justify-between items-center h-full p-4">
+          { 
+            book.cover_path&&
+          <Image width={200} height={200} src={book.cover_path} alt={`${book.title}'s cover`} />
           }
-          
-        }} passHref className="flex flex-col justify-between items-center h-full p-4">
-          <Image width={200} height={200} src={book.cover_path} alt={ `${book.title}'s cover`} />
    
           <h4 ref={titleRef} id="title" className="text-center text-xs font-semibold truncate mt-4">{book.title}</h4>
         </Link>

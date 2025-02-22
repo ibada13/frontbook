@@ -5,16 +5,16 @@ import React from "react";
 interface PaginatorProps {
   path: string;
   totalPages: number;
+  currentPage:number
 }
 
-const Paginator: React.FC<PaginatorProps> = ({path , totalPages }) => {
+const Paginator: React.FC<PaginatorProps> = ({path , totalPages ,currentPage }) => {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-    const searchparams = useSearchParams();
-    const currentPage = Number(searchparams.get('id'))||1
+console.log(currentPage===1)
   return (
     <div className="text-white p-3 text-lg" style={{ display: "flex", gap: "8px", justifyContent: "center", marginTop: "20px" }}>
       <Link
-              href={`${path}?id=${currentPage - 1}`}
+              href={`${path}/${currentPage - 1}`}
               className={currentPage === 1 ? ' hidden text-red-600 cursor-not-allowed' : ''}
               aria-disabled={ currentPage === 1}
       >
@@ -24,7 +24,7 @@ const Paginator: React.FC<PaginatorProps> = ({path , totalPages }) => {
       {pages.map((page) => (
         <Link
               key={page}
-              href={`${path}?id=${page}`}
+              href={`${path}/${page}`}
               
               className={ currentPage === page ? 'text-red-600 text-2xl font-extrabold':''}
         >
@@ -34,7 +34,7 @@ const Paginator: React.FC<PaginatorProps> = ({path , totalPages }) => {
 
       <Link
         className={currentPage === totalPages ?' hidden' :''}
-      href={`${path}?id=${currentPage +1 }`}
+      href={`${path}/${currentPage +1 }`}
 
 
       >
