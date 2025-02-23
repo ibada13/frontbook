@@ -8,7 +8,7 @@ export const useAuth = ({
   middleware,
   redirectIfAuthenticated,
 }: {
-  middleware?:string;
+  middleware?:"auth"|"guest"|"optional"|string;
   redirectIfAuthenticated?: string;
 }) => {
   const router = useRouter();

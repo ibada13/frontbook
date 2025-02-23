@@ -111,7 +111,7 @@ const Book = ({ params }: { params: {id:number} }) => {
                                             <form className=" p-2 flex " onSubmit={handleSubmit}>
                                                 <div className="flex items-center justify-center">
 
-                                                <input defaultValue={book.pages_read} onChange={handleChange} className="text-black text-xl font-semibold  h-2/3 w-1/2" type="number" placeholder="أدخل رقم الصفحة التي وصلت لها " />
+                                                <input defaultValue={book.pages_read} onChange={handleChange} className="text-black text-xl font-semibold  h-2/3 w-1/2 rounded-lg" type="number" placeholder="أدخل رقم الصفحة التي وصلت لها " />
                                                 </div>
                                                 <div className="flex flex-col justify-around p-2">
 
@@ -127,8 +127,18 @@ const Book = ({ params }: { params: {id:number} }) => {
                             <span>{book.pages_read}</span>
                             <span className="text-red-500">من</span>
                             <span>{book.pages}</span>
-                                </p>) :
-                                    <button className="bg-green-500 hover:text-black hover:bg-green-600 transition-colors duration-150 rounded-lg py-4 px-6 font-semibold" onClick={() => startreading(book.id)}>أريد قراءة هذا الكتاب</button>
+                                        </p>) :
+                                    (
+                                        <div className="flex flex-col items-center ">
+                                            <p className="mb-3">
+                                                <span>صفحة :</span>
+                            <span className="mb-2 font-bold text-lg">{book.pages}</span>
+                                                    
+                                        </p>
+
+                                        <button className="bg-green-500 hover:text-black hover:bg-green-600 transition-colors duration-150 rounded-lg py-4 px-6 font-semibold" onClick={() => startreading(book.id)}>أريد قراءة هذا الكتاب</button>
+                                        </div>
+                                    )
                                 : null
                         }
                         <p className="text-md">{book.description}</p>

@@ -30,7 +30,11 @@ const fetcher = async (url:string) => {
 };
 const post = async (url: string ,data?:any) => {
   try {
-    const response = await axios.post(url , data)
+    const response = await axios.post(url , data, {
+      headers: {
+          "Content-Type": "multipart/form-data",
+      },
+  })
     return response.data
   }
   catch (err) {
@@ -40,7 +44,6 @@ const post = async (url: string ,data?:any) => {
 }
 
 const del = async (url: string) => {
-    // console.log(url)
     try {
         const response = await axios.delete(url);
       

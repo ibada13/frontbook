@@ -26,14 +26,14 @@ const Navigation = ({ user }: { user: UserType }) => {
           <div className="flex">
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center">
-              <Link href="/books">
+              <Link href="/books/1">
                 <GiBookStorm  className="block  w-auto fill-current text-red-500 text-3xl hover:text-red-900 transition-all duration-300" size={65}/>
               </Link>
             </div>
 
             {/* Navigation Links */}
             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex  ">
-              <NavLink href="/books" active={pathname === '/books'}>
+              <NavLink href="/books" active={pathname === '/books/1'}>
                 Home
               </NavLink>
             </div>
