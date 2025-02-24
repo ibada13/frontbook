@@ -11,8 +11,10 @@ const AppLayout = ({ children , path, totalPages , middleware ,currentPage }: { 
     <div className="min-h-screen bg-black ">
       <Navigation user={user} />
 
-      {/* Page Content */}
-      <main className='flex  justify-center items-center bg-black mt-8'>{children}</main>
+      {
+        
+        <main className='flex  justify-center items-center bg-black mt-8'>{children}</main>
+      }
       { 
       totalPages&&path&&currentPage?
       <Paginator currentPage={currentPage} totalPages={totalPages} path={path} />
