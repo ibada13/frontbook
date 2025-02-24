@@ -36,24 +36,29 @@ const Navigation = ({ user }: { user: UserType }) => {
            
               <NavLink active={ pathname === "/books/1"} href="/books/1">الرئيسية</NavLink>
               
-              <NavLink href="/books/popular">أشهر الكتب</NavLink>
+              <NavLink active={ pathname.startsWith("/books/popular")} href="/books/popular">أشهر الكتب</NavLink>
                 
-              <NavLink href="/books/saved">كتبي المحفوظة</NavLink>
+              <NavLink active={ pathname.startsWith("/books/saved")} href="/books/saved">كتبي المحفوظة</NavLink>
                 
-              <NavLink href="/books/read">كتبي التي أقرئها</NavLink>
-              <NavLink href="/books/readed">كتبي التي قرأتها</NavLink>
+<NavLink active={pathname.startsWith("/books/read") && pathname !== "/books/readed"} href="/books/read">
+  كتبي التي أقرئها
+</NavLink>
+              <NavLink active={pathname === "/books/readed"} href="/books/readed">
+  كتبي التي قرأتها
+</NavLink>
+
               {user&& user.role<3&&(
               <>
-                  <NavLink href="/books/pending">الكتب المعلقة </NavLink>
+                  <NavLink active={ pathname.startsWith("/books/pending")} href="/books/pending">الكتب المعلقة </NavLink>
                 
-                <NavLink href="/user/">الأعضاء</NavLink>
+                <NavLink active={ pathname.startsWith("/users")} href="/users">الأعضاء</NavLink>
               </>
               )
               }
               {user && user.role === 1&&(
                 
                 
-                <NavLink href="/users/mods">المشرفون</NavLink>
+                <NavLink active={ pathname.startsWith("/users/mods")} href="/users/mods">المشرفون</NavLink>
               )
               }
 

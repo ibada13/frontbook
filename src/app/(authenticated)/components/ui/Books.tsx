@@ -7,8 +7,8 @@ import { fetcher } from "@/hooks/userhooks";
 import BookCard from "@/app/(optional)/books/ui/Book";
 
 
-const PendingBooks = ({ params }: { params: {id:number , apiUrl:string ,middleware:string ,path:string} }) => {
-    const id =  Number(params.id)||1;
+const Books = ({ params }: { params: {id:number , apiUrl:string ,middleware:string ,path:string} }) => {
+    const id =  params.id;
   
     const { data: bookList, error, isLoading } = useSWR<data>( params.apiUrl , fetcher);
   
@@ -16,7 +16,9 @@ const PendingBooks = ({ params }: { params: {id:number , apiUrl:string ,middlewa
     console.log(bookList)
     return (
         <AppLayout currentPage={id} middleware={params.middleware} path={ params.path} totalPages={bookList?.last_page||null}>
-        {error ? (
+
+        {
+          error ? (
   
           <TextDisplay text='حدث خطأ أثناء تحميل الكتب.'/>
   
@@ -43,4 +45,4 @@ const PendingBooks = ({ params }: { params: {id:number , apiUrl:string ,middlewa
 
 
 
-export default PendingBooks;
+export default Books;

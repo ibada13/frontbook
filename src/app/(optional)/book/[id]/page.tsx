@@ -122,6 +122,9 @@ const Book = ({ params }: { params: {id:number} }) => {
                                         </form>
                                         )
                                         
+                                        : book.pages_read === book.pages ?
+                            <span onClick={()=>SetEdit(true)} className="cursor-pointer text-red-500 text-xl font-bold">تمت قرائته</span>
+
                                         :
                             (<p onClick={()=>SetEdit(true)} className=" cursor-pointer text-xl flex text-white gap-x-4">
                             <span>{book.pages_read}</span>
@@ -131,7 +134,7 @@ const Book = ({ params }: { params: {id:number} }) => {
                                     (
                                         <div className="flex flex-col items-center ">
                                             <p className="mb-3">
-                                                <span>صفحة :</span>
+                                                <span>عدد الصفحات :</span>
                             <span className="mb-2 font-bold text-lg">{book.pages}</span>
                                                     
                                         </p>

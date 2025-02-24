@@ -8,13 +8,13 @@ export const useAuth = ({
   middleware,
   redirectIfAuthenticated,
 }: {
-  middleware?:"auth"|"guest"|"optional"|string;
+  middleware?:"auth"|"guest"|"optional"|"limitedguest"|string;
   redirectIfAuthenticated?: string;
 }) => {
   const router = useRouter();
   const params = useParams();
 
-  const { data: user, error, mutate } = useSWR('/api/user', () =>
+  const { data: user, error, mutate, isValidating } = useSWR('/api/user', () =>
     axios
       .get('/api/user')
       .then(res => res.data)
@@ -23,6 +23,9 @@ export const useAuth = ({
         router.push('/verify-email');
       })
   );
+
+  
+  const isLoading = !user && !error && isValidating;
 
   const csrf = () => axios.get('/sanctum/csrf-cookie');
 
@@ -88,13 +91,14 @@ export const useAuth = ({
       router.push(redirectIfAuthenticated);
     }
     if (middleware === "auth" && error) logout();
-    if (middleware === "optional") {
+    if (middleware === "optional" || middleware === "limitedguest") {
       return;
     }
   }, [user, error, middleware, redirectIfAuthenticated]);
 
   return {
     user,
+    isLoading, 
     register,
     login,
     forgotPassword,
