@@ -32,10 +32,31 @@ const Navigation = ({ user }: { user: UserType }) => {
             </div>
 
             {/* Navigation Links */}
-            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex  ">
-              <NavLink href="/books" active={pathname === '/books/1'}>
-                Home
-              </NavLink>
+            <div className="sm:mr-4 sm:gap-x-10     hidden sm:flex sm:justify-around ">
+           
+              <NavLink active={ pathname === "/books/1"} href="/books/1">الرئيسية</NavLink>
+              
+              <NavLink href="/books/popular">أشهر الكتب</NavLink>
+                
+              <NavLink href="/books/saved">كتبي المحفوظة</NavLink>
+                
+              <NavLink href="/books/read">كتبي التي أقرئها</NavLink>
+              <NavLink href="/books/readed">كتبي التي قرأتها</NavLink>
+              {user&& user.role<3&&(
+              <>
+                  <NavLink href="/books/pending">الكتب المعلقة </NavLink>
+                
+                <NavLink href="/user/">الأعضاء</NavLink>
+              </>
+              )
+              }
+              {user && user.role === 1&&(
+                
+                
+                <NavLink href="/users/mods">المشرفون</NavLink>
+              )
+              }
+
             </div>
           </div>
 
