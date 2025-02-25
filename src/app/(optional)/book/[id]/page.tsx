@@ -13,6 +13,8 @@ import TextDisplay from "@/app/(authenticated)/components/TextDisplay";
 import { useAuth } from "@/hooks/auth";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { BiHeart, BiTag } from "react-icons/bi";
+import { BsBookmarkFill, BsFillHeartFill, BsFillTagFill, BsTagFill } from "react-icons/bs";
 
 const Book = ({ params }: { params: {id:number} }) => {
     // const router = useRouter();
@@ -39,7 +41,30 @@ const Book = ({ params }: { params: {id:number} }) => {
             console.error("error " , err)
         }
     }
+    const saveit = async (id:number) => { 
+        try {
 
+            const url = `/api/book/${id}/save`
+            
+            
+            post(url)
+            mutate()
+        } catch (err) { 
+            console.error("error " , err)
+        }
+    }
+    const favoriteit = async (id: number) => { 
+        try {
+
+            const url = `/api/book/${id}/favorite`
+            
+            
+            post(url)
+            mutate()
+        } catch (err) { 
+            console.error("error " , err)
+        }
+    }
 
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -56,14 +81,22 @@ const Book = ({ params }: { params: {id:number} }) => {
 
         }
 }
-    if (isLoading) return <TextDisplay text='يتم تحميل الكتاب ....'/>;
+    // if (isLoading) return <TextDisplay text='يتم تحميل الكتاب ....'/>;
         
-    if (error || !book) return <TextDisplay text='هذا الكتاب غير متاح حاليا.'/>;
+    // if (error || !book) return <TextDisplay text='هذا الكتاب غير متاح حاليا.'/>;
 
 
     return (
         <AppLayout currentPage={id} middleware="optional">
-            <div className="flex flex-col w-full justify-around text-white">
+            { 
+                isLoading ?
+                    <TextDisplay text='يتم تحميل الكتاب ....' />
+                    :
+                    (error || !book) ?<TextDisplay text='هذا الكتاب غير متاح حاليا.'/>
+                        :
+                    (
+                    
+                    <div className="flex flex-col w-full justify-around text-white">
                 <div className="p-6">
 
                     <p>ناشر الكتاب : <Link href={`/user/${book.publisher.id}`}>{book.publisher.name}</Link> </p>
@@ -102,9 +135,11 @@ const Book = ({ params }: { params: {id:number} }) => {
                             </button>
                         </div>
                         )
-                        }
+                    }
                         { 
-                            user ?
+                                            user ?
+                                                <div className="flex flex-col sm:flex-row gap-y-8 sm:gap-y-0 sm:gap-x-4   w-full sm:justify-around ">
+{
                                 book?.pages_read !== null ?
                                     Edit ?
                                         (
@@ -122,17 +157,20 @@ const Book = ({ params }: { params: {id:number} }) => {
                                         </form>
                                         )
                                         
-                                        : book.pages_read === book.pages ?
-                            <span onClick={()=>SetEdit(true)} className="cursor-pointer text-red-500 text-xl font-bold">تمت قرائته</span>
+                                                                : book.pages_read === book.pages ?
+                                                                    <div className="flex justify-center items-center">
+
+                            <span onClick={()=>SetEdit(true)} className="cursor-pointer text-green-400 text-4xl font-bold">تمت قرائته</span>
+                                                                    </div>
 
                                         :
-                            (<p onClick={()=>SetEdit(true)} className=" cursor-pointer text-xl flex text-white gap-x-4">
+                            (<p onClick={()=>SetEdit(true)} className=" cursor-pointer text-xl flex items-center justify-center text-white gap-x-4">
                             <span>{book.pages_read}</span>
                             <span className="text-red-500">من</span>
                             <span>{book.pages}</span>
                                         </p>) :
                                     (
-                                        <div className="flex flex-col items-center ">
+                                        <div className="flex flex-col justify-around items-center gap-y-10">
                                             <p className="mb-3">
                                                 <span>عدد الصفحات :</span>
                             <span className="mb-2 font-bold text-lg">{book.pages}</span>
@@ -141,7 +179,12 @@ const Book = ({ params }: { params: {id:number} }) => {
 
                                         <button className="bg-green-500 hover:text-black hover:bg-green-600 transition-colors duration-150 rounded-lg py-4 px-6 font-semibold" onClick={() => startreading(book.id)}>أريد قراءة هذا الكتاب</button>
                                         </div>
-                                    )
+                                                            )}
+                                                        <div className="flex gap-y-10 flex-col  items-center justify-around">
+                                                        <div><BsFillHeartFill className={`${book.favorited ? "text-red-500 hover:text-transparent" : "hover:text-red-500"} transition-colors duration-200 cursor-pointer `} onClick={() => favoriteit(book.id)} size={70} /></div>
+                                                    <div><BsBookmarkFill  className={`${book.saved ?"text-green-600 hover:text-transparent":"hover:text-green-600"} transition-colors duration-200 cursor-pointer `} onClick={() => saveit(book.id)} size={70}/></div>
+                                                    </div>
+                                                </div>
                                 : null
                         }
                         <p className="text-md">{book.description}</p>
@@ -149,6 +192,8 @@ const Book = ({ params }: { params: {id:number} }) => {
                 </div>
                     <Comments user={user} id={id}/>
             </div>
+)
+    }
         </AppLayout>
     );
 };
