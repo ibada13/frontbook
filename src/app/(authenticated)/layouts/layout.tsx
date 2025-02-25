@@ -26,8 +26,8 @@ const AppLayout = ({ children, path, totalPages, middleware, currentPage }: AppL
         <TextDisplay text='جارٍ التحميل...'/>
 
       ) : !user && middleware === "limitedguest" ? (
-        <div className="w-screen h-[80vh] flex justify-center items-center text-white">
-          <div className="w-screen h-1/2 flex flex-col items-center justify-around">
+        <div className="w-full h-[80vh] flex justify-center items-center text-white">
+          <div className="w-full h-1/2 flex flex-col items-center justify-around">
             <p className="text-4xl font-bold">يرجي تسجيل الدخول لإستخدام هذه الميزة</p>
             <Link href="/login" className="hover:text-gray-400 text-2xl font-bold transition-colors duration-200">
               تسجيل الدخول
