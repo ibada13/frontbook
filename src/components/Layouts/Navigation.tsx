@@ -32,13 +32,42 @@ const Navigation = ({ user }: { user: UserType }) => {
             </div>
 
             {/* Navigation Links */}
-            <div className="hidden sm:flex sm:gap-x-10">
+            <div className="hidden sm:flex sm:items-center sm:gap-x-10">
               <NavLink active={pathname === "/books/1"} href="/books/1">الرئيسية</NavLink>
               <NavLink active={pathname.startsWith("/books/popular")} href="/books/popular">أشهر الكتب</NavLink>
-              <NavLink active={pathname.startsWith("/books/saved")} href="/books/saved">كتبي المحفوظة</NavLink>
+              <Dropdown
+              align="left"
+              width={48}
+              trigger={
+                <button className="flex items-center justify-center text-sm font-medium text-red-400 hover:text-red-700 transition duration-150">
+                  <div>كتبي</div>
+                  <div className="ml-1">
+                    <MdOutlineArrowDropDown  className='fill-current h-4 w-4'/>
+                  </div>
+                </button>
+              }
+              >{!user&&
+                  <p className='text-center font-semibold '>
+                    <Link href={"/login"} className='hover:text-red-500 transition-colors duration-150' > تسجيل الدخول </Link>
+  لإستعمال هذه الميزات </p>
+                }
+                <DropdownButton >
               <NavLink active={pathname.startsWith("/books/favorite")} href="/books/favorite">كتبي المفضلة</NavLink>
-              <NavLink active={pathname.startsWith("/books/read") && pathname !== "/books/readed"} href="/books/read">كتبي التي أقرئها</NavLink>
-              <NavLink active={pathname === "/books/readed"} href="/books/readed">كتبي التي قرأتها</NavLink>
+                  
+              </DropdownButton>
+              <DropdownButton >
+              <NavLink active={pathname.startsWith("/books/saved")} href="/books/saved">كتبي المحفوظة</NavLink>
+                  
+                </DropdownButton>
+                <DropdownButton  >
+                <NavLink active={pathname === "/books/readed"} href="/books/readed">كتبي التي قرأتها</NavLink>
+                  
+                </DropdownButton>
+                <DropdownButton  >
+                <NavLink active={pathname === "/books/published"} href="/books/published">كتبي التي نشرتها</NavLink>
+                  
+                </DropdownButton>
+            </Dropdown>
               <Dropdown
               align="left"
               width={48}
@@ -51,14 +80,28 @@ const Navigation = ({ user }: { user: UserType }) => {
                 </button>
               }
               >
+                  
+                {!user&&(
+                  <p className='text-center font-semibold '>يمكنك نشر الكتب إذا قمت ب
+                  <Link className='hover:text-red-500 duration-150 transition-colors' href={"/login"}>تسجيل الدخول</Link>
+                  </p>
+                
+                )}
+                {user&&(
+                
+                <>
                 <DropdownButton >
-              <NavLink active={pathname === "/books/pending-delete"} href="/books/readed">كتبي التي قرأتها</NavLink>
+              <NavLink active={pathname === "/books/pending-delete"} href="/books/pending-delete">الكتب التي طالبت بحدفها</NavLink>
                   
               </DropdownButton>
               <DropdownButton >
-              <NavLink active={pathname === "/books/pending-approve"} href="/books/readed">كتبي التي قرأتها</NavLink>
+              <NavLink active={pathname === "/books/pending-approve"} href="/books/pending-approve">الكتب التي طالبت بنشرها</NavLink>
                   
               </DropdownButton>
+                </>
+                )}
+               
+           
             </Dropdown>
               {user && user.role < 3 && (
                 <>
