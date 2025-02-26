@@ -10,26 +10,25 @@ export default function BookPreview({
   onAccept?: () => void;
   onDecline?: () => void;
 }) {
-  const isPendingDelete = book.status === "pending_delete";
+  const isPendingDelete = book.status === 3;
 
   return (
     <div
       className={`flex items-center justify-between gap-4 p-4 border rounded-xl w-full max-w-2xl shadow-md transition duration-300 
         ${isPendingDelete ? "bg-red-900 border-red-700 hover:bg-red-800" : "bg-green-900 border-green-700 hover:bg-green-800"}`}
     >
-      {/* Book Info */}
       <div className="flex flex-col items-start w-1/3 gap-2">
         <button
           onClick={onAccept}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500 transition-all shadow"
         >
-          ✅ Accept
+           Accept
         </button>
         <button
           onClick={onDecline}
           className="px-4 py-2 text-sm font-medium text-white bg-gray-700 rounded-lg hover:bg-gray-600 transition-all shadow"
         >
-          ❌ Decline
+           Decline
         </button>
       </div>
       <Link href={`/book/${book.id}`} className="flex justify-between items-center gap-4 flex-1">
@@ -48,7 +47,6 @@ export default function BookPreview({
             />
         </div>
             </Link>
-      {/* Action Buttons */}
     </div>
   );
 }
