@@ -8,7 +8,7 @@ import useSWRInfinite from "swr/infinite";
 import useSWR from "swr";
 import AppLayout from "@/app/(authenticated)/layouts/layout";
 import { del, fetcher, post, put } from "@/hooks/userhooks";
-import Comments from "../ui/Comments";
+import Comments from "../../../ui/Comments";
 import TextDisplay from "@/app/(authenticated)/components/TextDisplay";
 import { useAuth } from "@/hooks/auth";
 import axios from "axios";

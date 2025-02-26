@@ -1,7 +1,7 @@
 'use client'; // Ensure this is a client-side component
 
 import { useAuth } from '@/hooks/auth';
-import BookCard from "../ui/Book";
+import BookCard from "../../../ui/Book";
 import useSWR from "swr";
 import { useSearchParams } from 'next/navigation';
 import AppLayout from '@/app/(authenticated)/layouts/layout';

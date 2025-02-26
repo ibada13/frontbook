@@ -76,7 +76,7 @@ export const useAuth = ({
     if (!error) {
       await axios.post('/logout').then(() => mutate());
     }
-    window.location.pathname = '/books';
+    window.location.pathname = '/login';
   };
 
   useEffect(() => {
