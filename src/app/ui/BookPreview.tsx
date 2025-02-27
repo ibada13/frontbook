@@ -20,15 +20,15 @@ export default function BookPreview({
       <div className="flex flex-col items-start w-1/3 gap-2">
         <button
           onClick={onAccept}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500 transition-all shadow"
+          className="px-4 py-2 text-sm font-medium text-white bg-green-400 rounded-lg hover:bg-green-800 transition-all duration-150 shadow"
         >
-           Accept
+           قبول
         </button>
         <button
           onClick={onDecline}
-          className="px-4 py-2 text-sm font-medium text-white bg-gray-700 rounded-lg hover:bg-gray-600 transition-all shadow"
+          className="px-4 py-2 text-sm font-medium text-white bg-red-400 rounded-lg hover:bg-red-800 transition-all duration-200 shadow"
         >
-           Decline
+            رفض
         </button>
       </div>
       <Link href={`/book/${book.id}`} className="flex justify-between items-center gap-4 flex-1">
@@ -43,10 +43,11 @@ export default function BookPreview({
             alt={book.title}
             layout="fill"
             objectFit="cover"
-            className="transition-transform duration-200 hover:scale-105"
+            className="transition-transform duration-200 hover:scale-110"
             />
         </div>
             </Link>
     </div>
   );
 }
+  
