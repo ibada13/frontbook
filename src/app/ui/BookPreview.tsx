@@ -3,15 +3,24 @@ import Image from "next/image";
 
 export default function BookPreview({
   book,
+
   onAccept,
   onDecline,
 }: {
   book: any;
-  onAccept?: () => void;
-  onDecline?: () => void;
+    onAccept: (BookId: number) => Promise<void>;
+    onDecline: (BookId: number) => Promise<void>;
 }) {
   const isPendingDelete = book.status === 3;
+ function handleOnAccept() {
 
+    onAccept(book.id);
+     
+   
+  }
+  function handleOnDecline() {
+  onDecline(book.id)
+  }
   return (
     <div
       className={`flex items-center justify-between gap-4 p-4 border rounded-xl w-full max-w-2xl shadow-md transition duration-300 
@@ -19,13 +28,13 @@ export default function BookPreview({
     >
       <div className="flex flex-col items-start w-1/3 gap-2">
         <button
-          onClick={onAccept}
+          onClick={handleOnAccept}
           className="px-4 py-2 text-sm font-medium text-white bg-green-400 rounded-lg hover:bg-green-800 transition-all duration-150 shadow"
         >
            قبول
         </button>
         <button
-          onClick={onDecline}
+          onClick={handleOnDecline}
           className="px-4 py-2 text-sm font-medium text-white bg-red-400 rounded-lg hover:bg-red-800 transition-all duration-200 shadow"
         >
             رفض
@@ -44,6 +53,7 @@ export default function BookPreview({
             layout="fill"
             objectFit="cover"
             className="transition-transform duration-200 hover:scale-110"
+
             />
         </div>
             </Link>

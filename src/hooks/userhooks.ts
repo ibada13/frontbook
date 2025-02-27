@@ -19,7 +19,6 @@ const fetcher = async (url:string) => {
     try {
         const response = await axios.get(url);
         
-        console.log(response.data)
       return response.data;
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -53,7 +52,7 @@ const del = async (url: string) => {
         return null;
     }
 }
-const put = async (url: string, data: any) => { 
+const put = async (url: string, data?: any) => { 
   try { 
     console.log("data :" ,data)
     const response = await axios.put(url, data)

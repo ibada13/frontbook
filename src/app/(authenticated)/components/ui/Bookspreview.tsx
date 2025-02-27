@@ -3,7 +3,7 @@
 import TextDisplay from "@/app/(authenticated)/components/TextDisplay";
 import AppLayout from "../../layouts/layout";
 import useSWR from "swr";
-import { fetcher } from "@/hooks/userhooks";
+import { fetcher, put } from "@/hooks/userhooks";
 import BookCard from "@/app/ui/Book";
 import BookPreview from "@/app/ui/BookPreview";
 
@@ -26,14 +26,31 @@ interface BookList {
   last_page?: number;
 }
 
-const Books = ({ params }: { params: Params }) => {
-  const { id, apiUrl, middleware, path, componenttype } = params;
+const BooksPreview = ({ params }: { params: Params }) => {
+  const { id, apiUrl, middleware, path } = params;
   const { data: bookList, error, isLoading,mutate} = useSWR<BookList>(apiUrl, fetcher);
 
   if (error) {
     console.error("Error fetching books:", error);
   }
+  const handleAccept = async (BookId: number) => {
+    try {
+        await put(`/api/books/${BookId}/accept_pending_book`);
 
+      mutate();
+    } catch (error) {
+      console.error("Error editing comment:", error);
+    }
+    };
+
+      const handleDecline = async (BookId: number) => {
+        try {
+          await put(`/api/books/${BookId}/decline-pending`);
+          mutate();
+        } catch (error) {
+          console.error("Error editing comment:", error);
+        }
+      };
   return (
     <AppLayout
       currentPage={id}
@@ -48,13 +65,14 @@ const Books = ({ params }: { params: Params }) => {
             :
             error?<TextDisplay text="حدث خطأ أثناء تحميل الكتب." />:
           bookList?.data?.length ? (
+          
+            <div className="flex flex-col w-full items-center gap-y-8">
+              { 
 
-            <div className="w-full min-h-screen grid md:grid-cols-3 grid-cols-2 gap-y-10 place-items-center justify-center">
-              {bookList.data.map((book) => (
-                <BookCard book={book} key={book.id} />
-              ))}
+            bookList.data.map((book) => <BookPreview onDecline={handleDecline}  onAccept={handleAccept} book={book} key={book.id} />)
+              }
             </div>
-        
+          
         ) : (
           <p className="text-white text-2xl">لا توجد كتب متاحة حاليا.</p>
         )}
@@ -63,4 +81,4 @@ const Books = ({ params }: { params: Params }) => {
   );
 };
 
-export default Books;
+export default BooksPreview;
