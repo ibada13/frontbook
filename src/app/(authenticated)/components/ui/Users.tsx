@@ -2,7 +2,7 @@
 
 import useSWR from "swr";
 import AppLayout from "@/app/(authenticated)/layouts/layout";
-import { fetcher } from "@/hooks/userhooks";
+import { fetcher, put } from "@/hooks/userhooks";
 import UserCard from "@/app/ui/UserPreview";
 import { UserType } from "@/types/User";
 import TextDisplay from "../TextDisplay";
@@ -19,12 +19,20 @@ interface Params {
   }
 export default function Users({ params }: { params: Params }) {
     const { id, apiUrl, middleware, path, componenttype } = params;
-    const { data: users, error, isLoading } = useSWR<UserList>(apiUrl, fetcher);
+    const { data: users, error, isLoading ,mutate} = useSWR<UserList>(apiUrl, fetcher);
   
     if (error) {
       console.error("Error fetching users:", error);
     }
+    const handleBan = async (UserId: number) => {
+      try {
+          await put(`/api/users/${UserId}/ban`);
   
+        mutate();
+      } catch (error) {
+        console.error("Error editing comment:", error);
+      }
+      };
     return (
       <AppLayout
         currentPage={id}
@@ -38,7 +46,7 @@ export default function Users({ params }: { params: Params }) {
             isLoading ? <TextDisplay text="يتم تحميل الكتب ...." />
               :
               error?<TextDisplay text="حدث خطأ أثناء تحميل الكتب." />:users?.data?.map((user:UserType, index:number) => (
-                <UserCard key={index} user={user} />
+                <UserCard OnBan={handleBan} key={index} user={user} />
             ))}
             </div>
         </AppLayout>
