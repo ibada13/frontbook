@@ -171,11 +171,7 @@ const Book = ({ params }: { params: {id:number} }) => {
                                         </p>) :
                                     (
                                         <div className="flex flex-col justify-around items-center gap-y-10">
-                                            <p className="mb-3">
-                                                <span>عدد الصفحات :</span>
-                            <span className="mb-2 font-bold text-lg">{book.pages}</span>
-                                                    
-                                        </p>
+                                            
 
                                         <button className="bg-green-500 hover:text-black hover:bg-green-600 transition-colors duration-150 rounded-lg py-4 px-6 font-semibold" onClick={() => startreading(book.id)}>أريد قراءة هذا الكتاب</button>
                                         </div>
@@ -185,7 +181,11 @@ const Book = ({ params }: { params: {id:number} }) => {
                                                     <div><BsBookmarkFill  className={`${book.saved ?"text-green-600 hover:text-transparent":"hover:text-green-600"} transition-colors duration-200 cursor-pointer `} onClick={() => saveit(book.id)} size={70}/></div>
                                                     </div>
                                                 </div>
-                                : null
+                                : <p className="mb-3">
+                                <span>عدد الصفحات :</span>
+            <span className="mb-2 font-bold text-lg">{book.pages}</span>
+                                    
+                        </p>
                         }
                         <p className="text-md">{book.description}</p>
                         </div>

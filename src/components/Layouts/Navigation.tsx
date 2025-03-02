@@ -111,7 +111,7 @@ const Navigation = ({ user }: { user: UserType }) => {
               )}
 
               {user && user.role === 1 && (
-                <NavLink active={pathname.startsWith("/users/mods")} href="/users/mods">المشرفون</NavLink>
+                <NavLink active={pathname.startsWith("/mods")} href="/mods">المشرفون</NavLink>
               )}
             </div>
           </div>
@@ -119,7 +119,7 @@ const Navigation = ({ user }: { user: UserType }) => {
           {/* User Dropdown */}
           { 
 
-            user&&(
+            user?(
           <div className="hidden sm:flex sm:items-center">
             <Dropdown
               align="left"
@@ -137,7 +137,10 @@ const Navigation = ({ user }: { user: UserType }) => {
             </Dropdown>
           </div>
         
-            )}
+            ) :
+            <Link href={"/login"} className='hover:text-red-500 transition-colors duration-150 text-gray-500 self-center font-semibold text-xl' > تسجيل الدخول </Link>
+
+            }
 
           {/* Mobile Menu Button */}
           <div className="-mr-2 flex sm:hidden">
