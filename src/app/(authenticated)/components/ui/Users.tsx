@@ -32,7 +32,16 @@ export default function Users({ params }: { params: Params }) {
       } catch (error) {
         console.error("Error editing comment:", error);
       }
-      };
+  };
+  const handleMod = async (UserId: number) => {
+    try {
+        await put(`/api/${UserId}/mod`);
+
+      mutate();
+    } catch (error) {
+      console.error("Error moding the user:", error);
+    }
+    };
     return (
       <AppLayout
         currentPage={id}
@@ -45,8 +54,8 @@ export default function Users({ params }: { params: Params }) {
           {
             isLoading ? <TextDisplay text="يتم تحميل الكتب ...." />
               :
-              error?<TextDisplay text="حدث خطأ أثناء تحميل الكتب." />:users?.data?.map((user:UserType, index:number) => (
-                <UserCard OnBan={handleBan} key={index} user={user} />
+              error?<TextDisplay text="حدث خطأ أثناء تحميل المستخدمين." />:users?.data?.map((user:UserType, index:number) => (
+                <UserCard OnMod={handleMod} OnBan={handleBan} key={index} user={user} />
             ))}
             </div>
         </AppLayout>
