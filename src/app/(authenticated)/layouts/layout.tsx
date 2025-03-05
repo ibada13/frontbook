@@ -11,7 +11,7 @@ interface AppLayoutProps {
   children: ReactNode
   path?: string
   totalPages?: number | null
-  middleware: string
+  middleware?:"auth"|"guest"|"optional"|"limitedguest"|string;
   currentPage?: number
 }
 
