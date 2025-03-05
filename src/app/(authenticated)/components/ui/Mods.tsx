@@ -32,7 +32,25 @@ export default function Mods({ params }: { params: Params }) {
       } catch (error) {
         console.error("Error editing comment:", error);
       }
-      };
+  };
+  const handleAdmin = async (UserId: number) => {
+    try {
+        await put(`/api/${UserId}/admin`);
+
+      mutate();
+    } catch (error) {
+      console.error("Error editing comment:", error);
+    }
+  };
+  const handleMod = async (UserId: number) => { 
+    try {
+      await put(`/api/${UserId}/mod`);
+
+    mutate();
+  } catch (error) {
+    console.error("Error editing comment:", error);
+  }
+  }
     return (
       <AppLayout
         currentPage={id}
@@ -46,7 +64,7 @@ export default function Mods({ params }: { params: Params }) {
             isLoading ? <TextDisplay text="يتم تحميل الكتب ...." />
               :
               error?<TextDisplay text="حدث خطأ أثناء تحميل الكتب." />:users?.data?.map((user:UserType, index:number) => (
-                <ModPreview OnBan={handleBan} key={index} user={user} />
+                <ModPreview onUnmod={handleMod } OnAdmin={handleAdmin} OnBan={handleBan} key={index} user={user} />
             ))}
             </div>
         </AppLayout>
