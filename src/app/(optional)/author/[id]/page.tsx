@@ -1,44 +1,41 @@
 'use client';
 import useSWR from "swr";
 import AppLayout from "@/app/(authenticated)/layouts/layout";
-import { data } from "@/types/Types";
 import { fetcher } from "@/hooks/userhooks";
-import Books from "@/app/(authenticated)/components/ui/Books";
-import TypeIcon from "../ui/TypeIcon";
+import Image from "next/image";
 import BookCard from "@/app/ui/Book";
-import { book_type } from "@/app/(authenticated)/components/extra/def";
-export default function Type({ params }: { params: {id:number} }) { 
+export default function Author({ params }: { params: {id:number} }) { 
     const id = Number(params.id) || 1
     const page = 1;
-    const apiUrl =`/api/books/${id}/type?page=${page}`
-    const TypeapiUrl = `/api/${id}/type`
+    const apiUrl =`/api/books/${id}/author?page=${page}`
+    const AuthorapiUrl = `/api/${id}/author`
     const { data: bookList, isLoading, error  } = useSWR<any>(apiUrl, fetcher);
-    const { data: Type, isLoading:isLoadingType, error:errorType } = useSWR(TypeapiUrl, fetcher);
-    console.log(Type)
+    const { data: Author, isLoading:isLoadingAuthor, error:errorAuthor } = useSWR(AuthorapiUrl, fetcher);
     return (
         <AppLayout
         currentPage={page}
         middleware={'optional'}
-        path={`/type/${id}/`}
+        path={`/author/${id}/`}
         totalPages={bookList?.last_page || null}
         >
             <div className="flex w-full flex-col gap-y-10">
-            {errorType ? (
-            <p className="text-red-400">خطأ في تحميل معلومات حول التصنيف</p>
+            {errorAuthor ? (
+            <p className="text-red-400">خطأ في تحميل معلومات حول الكاتب</p>
             ) :
-                isLoadingType ? (
-            <p className="text-red-400">يتم تحميل معلومات حول التصنيف</p>
+                isLoadingAuthor ? (
+            <p className="text-red-400">يتم تحميل معلومات حول الكاتب</p>
                     
-                ) : Type && (
+                ) : Author && (
 
                     <div className="flex w-full items-center justify-around">
-                <div className="w-1/3  flex justify-center items-center">
-                <TypeIcon className="text-white font-semibold text-9xl"  typekey={Type.name}/>
-                </div>
+<div className="w-48 h-48 relative flex justify-center items-center">
+    <Image fill alt="some pfp" src={Author.author_pfp} className="rounded-full object-cover" />
+</div>
+
                 
                     
                     <div className="w-4/6 text-xl text-white">
-                    { Type.description}
+                    { Author.bio}
                 </div>
                                 
                                 </div>
@@ -51,10 +48,10 @@ export default function Type({ params }: { params: {id:number} }) {
                                             <p className="text-red-400">يتم تحميل الكتب</p>
                     
                         ) : bookList && (
-                                <div className="flex w-full flex-col items-center gap-y-5">
-                                    <p className="text-5xl text-red-500">أشهر الكتب في هذا التصنيف</p>
+                                <div className="flex w-full flex-col items-center gap-y-10">
+                                    <p className="text-5xl text-red-500">أشهر الكتب لهاذا المؤلف</p>
 
-                                            <div className="w-full min-h-screen grid md:grid-cols-3 grid-cols-2 gap-y-10 place-items-center justify-center">
+                                            <div className="w-full  min-h-screen grid md:grid-cols-3 grid-cols-2 gap-y-10 place-items-center justify-center">
                                                 {bookList.data.map((book: any) => (
                                                     <BookCard book={book} key={book.id} />
                                                 ))}

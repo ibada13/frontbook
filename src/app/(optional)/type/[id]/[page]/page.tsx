@@ -4,12 +4,12 @@ import AppLayout from "@/app/(authenticated)/layouts/layout";
 import { data } from "@/types/Types";
 import { fetcher } from "@/hooks/userhooks";
 import Books from "@/app/(authenticated)/components/ui/Books";
-import TypeIcon from "../ui/TypeIcon";
+import TypeIcon from "../../ui/TypeIcon";
 import BookCard from "@/app/ui/Book";
 import { book_type } from "@/app/(authenticated)/components/extra/def";
-export default function Type({ params }: { params: {id:number} }) { 
+export default function Type({ params }: { params: {id:number,page:number} }) { 
     const id = Number(params.id) || 1
-    const page = 1;
+    const page = Number(params.page) || 1;
     const apiUrl =`/api/books/${id}/type?page=${page}`
     const TypeapiUrl = `/api/${id}/type`
     const { data: bookList, isLoading, error  } = useSWR<any>(apiUrl, fetcher);
