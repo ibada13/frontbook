@@ -6,7 +6,7 @@ import Image from "next/image";
 import BookCard from "@/app/ui/Book";
 export default function Author({ params }: { params: {id:number,page:number} }) { 
     const id = Number(params.id) || 1
-    const page = 1;
+    const page = Number(params.page)||1;
     const apiUrl =`/api/books/${id}/user?page=${page}`
     const UserapiUrl = `/api/${id}/user`
     const { data: bookList, isLoading, error  } = useSWR<any>(apiUrl, fetcher);
