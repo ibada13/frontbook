@@ -57,6 +57,14 @@ const Comments = ({ user, id }: { user: UserType; id: number }) => {
       console.error("Error deleting comment:", error);
     }
   };
+  const ModhandleDelete = async (commentId: number) => {
+    try {
+      await del(`/api/mod/comments/${commentId}`);
+      mutate();
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
 
   const handleEdit = async (commentId: number, data: any) => {
     try {
@@ -94,6 +102,8 @@ const Comments = ({ user, id }: { user: UserType; id: number }) => {
           const isLastComment = index === comments.length - 1;
           return (
             <Comment
+              ModhandleDelete={ModhandleDelete}
+              user={user}
               key={comment.id}
               handleDelete={handleDelete}
               handleEdit={handleEdit}

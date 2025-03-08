@@ -3,15 +3,18 @@ import { commentype } from "@/types/Types";
 import Link from "next/link";
 import { BiMemoryCard, BiPen, BiTrash } from "react-icons/bi";
 import { MdCancel } from "react-icons/md";
+import { UserType } from "@/types/User";
 
 type CommentProps = {
   comment: commentype;
   index: number;
+  user: UserType; 
   handleDelete: (id: number) => Promise<void>;
+  ModhandleDelete: (id: number) => Promise<void>;
   handleEdit: (id: number, data: any) => Promise<void>;
 };
 
-const Comment = forwardRef<HTMLDivElement, CommentProps>(({ comment, handleDelete, handleEdit }, ref) => {
+const Comment = forwardRef<HTMLDivElement, CommentProps>(({ModhandleDelete,user, comment, handleDelete, handleEdit }, ref) => {
   const [Edit, SetEdit] = useState<boolean>(false);
   const [updatedComment, setUpdatedComment] = useState<string>(comment.comment);
 
@@ -47,7 +50,7 @@ const Comment = forwardRef<HTMLDivElement, CommentProps>(({ comment, handleDelet
             </Link>
             <p className="text-sm">{comment.comment}</p>
           </div>
-          {comment.is_owner && (
+          {comment.is_owner ? (
             <div className="p-1 flex flex-col justify-between items-stretch h-full">
               <button className="hover:text-black transition-colors duration-150 bg-red-500 rounded-md text-xs" onClick={() => handleDelete(comment.id)}>
                 <BiTrash size={22} />
@@ -56,7 +59,14 @@ const Comment = forwardRef<HTMLDivElement, CommentProps>(({ comment, handleDelet
                 <BiPen size={22} />
               </button>
             </div>
-          )}
+            ) :
+            user.role<3&&
+            <div className="p-2 h-24 w-24 flex flex-col justify-between items-stretch ">
+                            <button className="flex flex-col items-center hover:text-black transition-colors duration-150 bg-violet-500 rounded-md text-xs" onClick={() => ModhandleDelete(comment.id)}>
+              delted as mod  <BiTrash size={22} />
+              </button>
+            </div>
+          }
         </div>
       )}
     </div>
