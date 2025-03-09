@@ -4,6 +4,7 @@ import AppLayout from "@/app/(authenticated)/layouts/layout";
 import { fetcher } from "@/hooks/userhooks";
 import Image from "next/image";
 import BookCard from "@/app/ui/Book";
+import { roles } from "../data";
 export default function Author({ params }: { params: {id:number,page:number} }) { 
     const id = Number(params.id) || 1
     const page = 1;
@@ -36,7 +37,7 @@ export default function Author({ params }: { params: {id:number,page:number} }) 
                     
                                 <div className="w-4/6 text-xl text-white flex justify-around">
                                     <p>إسم المستخدم : { User.name}</p>
-                                    <p>رتبة المستخدم : { User.role}</p>
+                                    <p>رتبة المستخدم : { roles[User.role]}</p>
                                    
                     
                 </div>

@@ -7,14 +7,25 @@ import Books from "@/app/(authenticated)/components/ui/Books";
 import TypeIcon from "../ui/TypeIcon";
 import BookCard from "@/app/ui/Book";
 import { book_type } from "@/app/(authenticated)/components/extra/def";
-export default function Type({ params }: { params: {id:number} }) { 
+import { useState } from "react";
+import { handleEdit } from "../functions";
+import { useAuth } from "@/hooks/auth";
+export default function Type({ params }: { params: {id:number,page:number} }) { 
     const id = Number(params.id) || 1
-    const page = 1;
+    const page =  1;
     const apiUrl =`/api/books/${id}/type?page=${page}`
     const TypeapiUrl = `/api/${id}/type`
+    const {user} = useAuth({})
     const { data: bookList, isLoading, error  } = useSWR<any>(apiUrl, fetcher);
-    const { data: Type, isLoading:isLoadingType, error:errorType } = useSWR(TypeapiUrl, fetcher);
-    console.log(Type)
+    const { data: Type, isLoading:isLoadingType, error:errorType ,mutate } = useSWR(TypeapiUrl, fetcher);
+    const [UpdatedDescription , SetUpdatedDescription] = useState<string|undefined>(Type?.description)
+    const [Edit, SetEdit] = useState<boolean>(false);
+    function Onsubmit(e:React.FormEvent) { 
+        e.preventDefault()
+        handleEdit(Type.id, {description:UpdatedDescription});
+        SetEdit(false)
+        mutate();
+    }
     return (
         <AppLayout
         currentPage={page}
@@ -36,9 +47,21 @@ export default function Type({ params }: { params: {id:number} }) {
                 <TypeIcon className="text-white font-semibold text-9xl"  typekey={Type.name}/>
                 </div>
                 
-                    
-                    <div className="w-4/6 text-xl text-white">
-                    { Type.description}
+                <div className="w-4/6 text-xl text-white">
+                                    {Edit &&user?.role<3 ?
+                                        <form className="w-full flex justify-around items-center " onSubmit={Onsubmit}>
+
+                                            <textarea className="rounded-lg bg-gray-800 text-red-500 w-1/2 text-lg" defaultValue={Type.description||""} onChange={(e)=>SetUpdatedDescription(e.target.value)} name="" id=""></textarea>
+                                            <button className="bg-green-500 hover:bg-green-800 hover:text-black transition-colors duration-200 px-6 py-4 rounded-xl" type="submit">تعديل</button>
+                                            <button className="bg-red-500 hover:bg-red-800 hover:text-black transition-colors duration-200 px-6 py-4 rounded-xl" onClick={e=>SetEdit(false)}>إلغاء</button>
+                                        </form>
+                                        
+                                        :
+                                        <p onClick={ (e)=>SetEdit(true)} className={` ${user?.role<3?"cursor-pointer":null} text-xl text-white`}>
+                                            
+                    { Type.description }
+                                </p>
+                }
                 </div>
                                 
                                 </div>
