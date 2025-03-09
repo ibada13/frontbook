@@ -60,7 +60,7 @@ const Comment = forwardRef<HTMLDivElement, CommentProps>(({ModhandleDelete,user,
               </button>
             </div>
             ) :
-            user.role<3&&
+            user?.role<3&&
             <div className="p-2 h-24 w-24 flex flex-col justify-between items-stretch ">
                             <button className="flex flex-col items-center hover:text-black transition-colors duration-150 bg-violet-500 rounded-md text-xs" onClick={() => ModhandleDelete(comment.id)}>
               delted as mod  <BiTrash size={22} />

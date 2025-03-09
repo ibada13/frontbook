@@ -4,13 +4,25 @@ import AppLayout from "@/app/(authenticated)/layouts/layout";
 import { fetcher } from "@/hooks/userhooks";
 import Image from "next/image";
 import BookCard from "@/app/ui/Book";
+import { useState } from "react";
+import { useAuth } from "@/hooks/auth";
+import { handleEdit } from "../functions";
 export default function Author({ params }: { params: {id:number,page:number} }) { 
     const id = Number(params.id) || 1
     const page = Number(params.page)||1;
     const apiUrl =`/api/books/${id}/author?page=${page}`
     const AuthorapiUrl = `/api/${id}/author`
     const { data: bookList, isLoading, error  } = useSWR<any>(apiUrl, fetcher);
-    const { data: Author, isLoading:isLoadingAuthor, error:errorAuthor } = useSWR(AuthorapiUrl, fetcher);
+    const { data: Author, isLoading:isLoadingAuthor, error:errorAuthor ,mutate} = useSWR(AuthorapiUrl, fetcher);
+    const [Edit, SetEdit] = useState<boolean>(false);
+    const [UpdatedBio, SetUpdatedBio] = useState<string>();
+    const { user } = useAuth({})
+        function Onsubmit(e:React.FormEvent) { 
+            e.preventDefault()
+            handleEdit(Author.id, {bio:UpdatedBio});
+            SetEdit(false)
+            mutate();
+        }
     return (
         <AppLayout
         currentPage={page}
@@ -35,7 +47,16 @@ export default function Author({ params }: { params: {id:number,page:number} }) 
                 
                     
                     <div className="w-4/6 text-xl text-white">
-                    { Author.bio}
+                                    {Edit && user?.role < 3 ?
+                                        <form className="w-full flex justify-around items-center " onSubmit={Onsubmit}>
+
+                                            <textarea className="rounded-lg bg-gray-800 text-red-500 w-1/2 text-lg" defaultValue={Author.bio || ""} onChange={(e) => SetUpdatedBio(e.target.value)} name="" id=""></textarea>
+                                            <button className="bg-green-500 hover:bg-green-800 hover:text-black transition-colors duration-200 px-6 py-4 rounded-xl" type="submit">تعديل</button>
+                                            <button className="bg-red-500 hover:bg-red-800 hover:text-black transition-colors duration-200 px-6 py-4 rounded-xl" onClick={e => SetEdit(false)}>إلغاء</button>
+                                        </form> :
+                                        
+                                        <p className="cursor-pointer " onClick={e=>SetEdit(true)}>{Author.bio}</p>
+                                        }
                 </div>
                                 
                                 </div>
