@@ -40,8 +40,8 @@ export interface booktype {
     updated_at:string , 
     pages:number,
     current_page_number:number,
-    authors: author[]
-    types:type[]
+    authors?: author[]
+    types?:type[]
 }
 export interface author {
     id: number,
