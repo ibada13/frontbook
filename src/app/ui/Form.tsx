@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
 
-export default function Form({ book }: { book?: any }) {
+export default function Form({ book , onSubmit }: { book?: any , onSubmit:(FormData:any)=>Promise<number> }) {
     const router = useRouter();
 
     const [formdata, setFormData] = useState(() => ({
@@ -50,13 +50,9 @@ export default function Form({ book }: { book?: any }) {
         if (coverFile) {
             formData.append("cover_path", coverFile);
         }
+        const book_id = onSubmit(formData)
+        router.push(`/book/${book_id}`);
 
-        try {
-            const response = await post("/api/book", formData);
-            router.push(`/book/${response.book_id}`);
-        } catch (error) {
-            console.error("Error posting book:", error);
-        }
     };
 
     return (
