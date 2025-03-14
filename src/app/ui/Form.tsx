@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
 
-export default function Form({ book , onSubmit ,apiurl }: { book?: any , onSubmit:(FormData:any , apiurl?:string)=>Promise<number>  , apiurl?:string}) {
+export default function Form({ book , onSubmit  }: { book?: any , onSubmit:(FormData:any )=>Promise<number>  , }) {
     const router = useRouter();
 
     const [formdata, setFormData] = useState(() => ({
@@ -46,12 +46,12 @@ export default function Form({ book , onSubmit ,apiurl }: { book?: any , onSubmi
         formData.append("description", formdata.description);
         formData.append("published_year", formdata.published_year);
         formData.append("isbn", formdata.isbn);
-
+        console.log(formData)
         if (coverFile) {
             formData.append("cover_path", coverFile);
         }
-        const book_id = onSubmit(formData,apiurl)
-        router.push(`/book/${book_id}`);
+        const book_id = await onSubmit(formData)
+       await router.push(`/book/${book_id}`);
 
     };
 

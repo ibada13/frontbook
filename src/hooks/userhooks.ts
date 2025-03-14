@@ -55,7 +55,11 @@ const del = async (url: string) => {
 const put = async (url: string, data?: any) => { 
   try { 
     console.log("data :" ,data)
-    const response = await axios.put(url, data)
+    const response = await axios.put(url, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+    },
+    })
     return response.data
   } catch (err) { 
     console.error("err puting the data ", err)
