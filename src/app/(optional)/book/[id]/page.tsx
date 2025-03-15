@@ -12,13 +12,14 @@ import Comments from "../../../ui/Comments";
 import TextDisplay from "@/app/(authenticated)/components/TextDisplay";
 import { useAuth } from "@/hooks/auth";
 import axios from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { BiHeart, BiTag } from "react-icons/bi";
 import { BsBookmarkFill, BsFillHeartFill, BsFillTagFill, BsTagFill } from "react-icons/bs";
 
 const Book = ({ params }: { params: {id:number} }) => {
     // const router = useRouter();
     // const id = router.query?.id ? Number(router.query.id) : null;
+    const router = useRouter();
     const id = Number(params.id)||1
     const apiUrl = `/api/book?id=${id}`;
     const { user} = useAuth({})
@@ -41,13 +42,22 @@ const Book = ({ params }: { params: {id:number} }) => {
             console.error("error " , err)
         }
     }
+    const delit = async (apiurl: string) => { 
+        try {
+            await del(apiurl)
+            await router.push("/books")
+        }
+        catch (err) { 
+            console.log("err: " , err)
+        }
+    }
     const saveit = async (id:number) => { 
         try {
 
             const url = `/api/book/${id}/save`
             
             
-            post(url)
+            await post(url)
             mutate()
         } catch (err) { 
             console.error("error " , err)
@@ -59,7 +69,7 @@ const Book = ({ params }: { params: {id:number} }) => {
             const url = `/api/book/${id}/favorite`
             
             
-            post(url)
+            await post(url)
             mutate()
         } catch (err) { 
             console.error("error " , err)
@@ -127,15 +137,26 @@ const Book = ({ params }: { params: {id:number} }) => {
                                 
                                 
                                 <div className="items-center  self-center flex flex-col sm:flex-row w-1/2 gap-y-3 sm:gap-y-0 sm:items-center sm:justify-around">
-                            <Link className="p-4 sm:w-1/4 w-1/2 text-md font-black bg-green-400 hover:text-black transition-colors duration-300 rounded-md text-center" href={{ pathname: `/book/edit/`, query: { book: JSON.stringify(book) } }}>
+                            <Link className="p-4 sm:w-1/4 w-1/2 text-md font-black bg-green-400 hover:text-black transition-colors duration-300 rounded-md text-center" href={`/book/edit/${book.id}`}>
                                 تعديل
                             </Link>
-                            <button className="p-4 sm:w-1/4 w-1/2 text-md font-black bg-red-500 hover:text-black transition-colors duration-300 rounded-md text-center">
+                            <button onClick={e=>delit(`/api/book/${book.id}/delete`)} className="p-4 sm:w-1/4 w-1/2 text-md font-black bg-red-500 hover:text-black transition-colors duration-300 rounded-md text-center">
                                 حذف
                             </button>
                         </div>
-                        )
-                    }
+                                            )
+                                        
+                                        }
+                                        { 
+                                            user.role<3&&(          <div className="items-center  self-center flex flex-col sm:flex-row w-1/2 gap-y-3 sm:gap-y-0 sm:items-center sm:justify-around">
+                                                <Link className="p-4 sm:w-1/4 w-1/2 text-md font-black bg-green-400 hover:text-black transition-colors duration-300 rounded-md text-center" href={`/book/edit/${book.id}`}>
+                                                تعديل كمشرف
+                                                </Link>
+                                                <button onClick={e=>delit(`/api/book/mod/${book.id}/delete`)} className="p-4 sm:w-1/4 w-1/2 text-md font-black bg-red-500 hover:text-black transition-colors duration-300 rounded-md text-center">
+                                                    حذف كمشرف
+                                                </button>
+                                            </div>)
+                                        }
                         { 
                                             user ?
                                                 <div className="flex flex-col sm:flex-row gap-y-8 sm:gap-y-0 sm:gap-x-4   w-full sm:justify-around ">
